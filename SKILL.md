@@ -7,6 +7,24 @@ description: 生成单帧画面提示词的引导型 skill。当用户想从模�
 
 把模糊想法逐步细化为完整单帧画面提示词，确认后交给 cinematic-video-prompt-engineer 输出视频提示词。
 
+## 依赖检查与配置（启动时第一步执行）
+
+按顺序检查以下依赖，**已安装就跳过，未安装用仓库内 deps/ 版本**：
+
+1. **识图 skill**：检查 `C:\Users\Felix\.codex\skills\glm-vision\SKILL.md` 和 `mimo-vision\SKILL.md` 是否存在
+   - 已存在 → 使用系统版，跳过
+   - 不存在 → 使用仓库内置 `deps/glm-vision/`（主）和 `deps/mimo-vision/`（备），并提示用户配置 API key：
+     - `glm-vision` 需要 `ZHIPU_API_KEY`（智谱开放平台 key，https://open.bigmodel.cn）
+     - `mimo-vision` 需要 `MIMO_API_KEY`（小米 MiMo key）
+     - 配置命令（PowerShell）：`[Environment]::SetEnvironmentVariable("ZHIPU_API_KEY","你的key","User")`
+     - 未配置 key 时识图功能不可用，此时引导用户改用文字描述
+2. **cinematic-video-prompt-engineer**：检查 `C:\Users\Felix\.codex\skills\cinematic-video-prompt-engineer\SKILL.md` 是否存在
+   - 已存在 → 使用系统版
+   - 不存在 → 使用仓库内置 `deps/cinematic-video-prompt-engineer/`（按其 SKILL.md 执行）
+3. **参考库**：默认 `references/`（仓库内置，随 git 同步）
+
+> 说明：脚本自动做"系统优先、deps 兜底"（save_reference.py 的 _resolve_script），无需手动切换。
+
 ## 启动流程
 
 1. 询问创作模式：

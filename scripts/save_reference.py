@@ -12,8 +12,23 @@ import subprocess
 import sys
 from datetime import date
 
-GLM_SCRIPT = r"C:\Users\Felix\.codex\skills\glm-vision\scripts\glm_vision.py"
-MIMO_SCRIPT = r"C:\Users\Felix\.codex\skills\mimo-vision\scripts\mimo_vision.py"
+_SKILLS_ROOT = r"C:\Users\Felix\.codex\skills"
+_DEPS_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "deps")
+
+
+def _resolve_script(rel_scripts):
+    """识图脚本路径：系统已装优先，否则用仓库内 deps 兜底（支持无识图环境打包分发）。"""
+    sys_path = os.path.join(_SKILLS_ROOT, rel_scripts)
+    if os.path.isfile(sys_path):
+        return sys_path
+    deps_path = os.path.join(_DEPS_ROOT, rel_scripts)
+    if os.path.isfile(deps_path):
+        return deps_path
+    return sys_path
+
+
+GLM_SCRIPT = _resolve_script(r"glm-vision\scripts\glm_vision.py")
+MIMO_SCRIPT = _resolve_script(r"mimo-vision\scripts\mimo_vision.py")
 DEFAULT_LIB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "references")
 
 VALID_DIMENSIONS = [

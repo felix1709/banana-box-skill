@@ -2,9 +2,24 @@
 
 单帧画面需求引导 skill：把模糊想法变成完整单帧画面提示词，再扩展成 AI 视频提示词。
 
-## 依赖
-- glm-vision（识图主）/ mimo-vision（识图备）—— 已安装
-- cinematic-video-prompt-engineer（视频提示词）—— 已安装
+## 依赖（自包含，deps/ 已打包）
+
+本仓库已打包完整依赖，clone 后开箱即用（无需额外安装）：
+
+- `deps/glm-vision/`：识图主（智谱 GLM-4.6V-Flash）
+- `deps/mimo-vision/`：识图备（小米 MiMo-V2.5，智谱限流时自动切换）
+- `deps/cinematic-video-prompt-engineer/`：视频提示词（完整版）
+
+**识别功能需要配置 key（首次使用）**：
+- `ZHIPU_API_KEY`（智谱）：https://open.bigmodel.cn 获取
+- `MIMO_API_KEY`（小米 MiMo）：备用，可选
+- 配置命令（PowerShell）：
+  ```powershell
+  [Environment]::SetEnvironmentVariable("ZHIPU_API_KEY","你的key","User")
+  [Environment]::SetEnvironmentVariable("MIMO_API_KEY","你的key","User")
+  ```
+
+**系统已安装同款 skill 时自动优先使用系统版**（脚本 _resolve_script 逻辑），无需手动切换。
 
 ## 使用
 在 Codex 对话中说"生成一个单帧画面"即可触发引导。
