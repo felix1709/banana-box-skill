@@ -12,7 +12,7 @@ description: 生成单帧画面提示词的引导型 skill。当用户想从模�
 1. 询问创作模式：
    - **概念创作**：单个画面，快速产出
    - **项目制作**：连续多帧，一个项目积累多个画面
-2. 指定参考库：询问已有参考库路径或新建（默认 `~\banana-box-references`）；多项目可共用同一参考库
+2. 指定参考库：默认使用 skill 内置知识库 `C:\Users\Felix\.codex\skills\banana-box-skill\references\`（8 个类目文件夹，随 git 同步逐步积累）；也可指定自定义外部参考库（多项目共用）
 3. 若是"项目制作"，用 project.py 创建/选择项目
 4. 开始混合式引导（见下）
 
@@ -45,6 +45,9 @@ description: 生成单帧画面提示词的引导型 skill。当用户想从模�
 
 ## 输出协议
 
+0. **自动检索知识库**：合成前，对已收集的每个维度（尤其画面构图/灯光氛围/美术风格/场景参考）调用 search_library.py 检索历史片段：
+  `python "C:\Users\Felix\.codex\skills\banana-box-skill\scripts\search_library.py" --lib <参考库> --dimension <维度>`
+  把命中的历史片段合入该维度 `text`（标注"参考库经验：..."）。参考库越用越丰富，提示词质量随之提升。
 1. 所有维度收集完后，把信息整理成需求 JSON：
 ```json
 {
@@ -77,4 +80,5 @@ description: 生成单帧画面提示词的引导型 skill。当用户想从模�
 - 参考库路径用正斜杠或双反斜杠，避免 PowerShell 转义问题
 - 识图脚本依赖 ZHIPU_API_KEY / MIMO_API_KEY（均已配置；脚本会自动从 Windows 用户环境变量读取，无需手动设置）
 - cinematic-video-prompt-engineer 必须先安装（见 README）
+- **知识库（references/）**：每个类目一个文件夹，永久积累参考图 + .md 分析，随 git 仓库同步备份；生成提示词时自动检索历史片段增强
 - **角色描述策略**：用户通常已有角色设定图。通用版（GPT-image2）提示词中角色描述保持简化，生成时由用户添加引用图确定长相；MJ 版保留完整角色文字描述（MJ 不支持图引用，可用 --cref 角色参考）。

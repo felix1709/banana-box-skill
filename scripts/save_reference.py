@@ -14,6 +14,7 @@ from datetime import date
 
 GLM_SCRIPT = r"C:\Users\Felix\.codex\skills\glm-vision\scripts\glm_vision.py"
 MIMO_SCRIPT = r"C:\Users\Felix\.codex\skills\mimo-vision\scripts\mimo_vision.py"
+DEFAULT_LIB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "references")
 
 VALID_DIMENSIONS = [
     "画面构图", "美术风格", "角色动作", "灯光氛围",
@@ -109,7 +110,7 @@ def main():
     parser.add_argument("--image", required=True, help="参考图路径")
     parser.add_argument("--dimension", required=True, choices=VALID_DIMENSIONS, help="维度")
     parser.add_argument("--name", required=True, help="文件名（不含路径，自动去掉扩展名）")
-    parser.add_argument("--lib", required=True, help="参考库根目录")
+    parser.add_argument("--lib", default=DEFAULT_LIB, help="参考库根目录（默认 skill 内置 references）")
     parser.add_argument("--tags", default="", help="逗号分隔标签（可选）")
     parser.add_argument("--skip-vision", action="store_true", help="跳过识图只存图")
     _ensure_api_keys()
