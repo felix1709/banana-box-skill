@@ -8,7 +8,8 @@
 
 - `deps/glm-vision/`：识图主（内网 `doubao-seed-1-6-vision-250815`）
 - `deps/mimo-vision/`：识图备（内网 `glm-5v-turbo`，主模型不可用时自动切换）
-- `deps/cinematic-video-prompt-engineer/`：视频提示词（完整版）
+- `deps/cinematic-prompt-engine/`：单帧生图提示词
+- `deps/cinematic-video-prompt-engineer/`：视频连续镜头提示词
 
 **识别功能需要配置 key（首次使用）**：
 - `LEIHUO_VISION_API_KEY`：内网视觉接口 key

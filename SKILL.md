@@ -21,7 +21,7 @@ description: 生成单帧画面提示词的引导型 skill。当用户想从模�
      - 未配置 key 时识图功能不可用，此时引导用户改用文字描述
 2. **单帧生图 skill**：检查 `C:\Users\admin\.codex\skills\cinematic-prompt-engine\SKILL.md` 是否存在
    - 已存在 → 单帧画面提示词使用 `cinematic-prompt-engine`
-   - 不存在 → 提示用户先安装该 skill
+   - 不存在 → 使用仓库内置 `deps/cinematic-prompt-engine/`（按其 SKILL.md 执行）
 3. **视频连续镜头 skill**：检查 `C:\Users\admin\.codex\skills\cinematic-video-prompt-engineer\SKILL.md` 是否存在
    - 已存在 → 使用系统版
    - 不存在 → 使用仓库内置 `deps/cinematic-video-prompt-engineer/`（按其 SKILL.md 执行）
