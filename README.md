@@ -6,17 +6,15 @@
 
 本仓库已打包完整依赖，clone 后开箱即用（无需额外安装）：
 
-- `deps/glm-vision/`：识图主（智谱 GLM-4.6V-Flash）
-- `deps/mimo-vision/`：识图备（小米 MiMo-V2.5，智谱限流时自动切换）
+- `deps/glm-vision/`：识图主（内网 `doubao-seed-1-6-vision-250815`）
+- `deps/mimo-vision/`：识图备（内网 `glm-5v-turbo`，主模型不可用时自动切换）
 - `deps/cinematic-video-prompt-engineer/`：视频提示词（完整版）
 
 **识别功能需要配置 key（首次使用）**：
-- `ZHIPU_API_KEY`（智谱）：https://open.bigmodel.cn 获取
-- `MIMO_API_KEY`（小米 MiMo）：备用，可选
+- `LEIHUO_VISION_API_KEY`：内网视觉接口 key
 - 配置命令（PowerShell）：
   ```powershell
-  [Environment]::SetEnvironmentVariable("ZHIPU_API_KEY","你的key","User")
-  [Environment]::SetEnvironmentVariable("MIMO_API_KEY","你的key","User")
+  [Environment]::SetEnvironmentVariable("LEIHUO_VISION_API_KEY","你的key","User")
   ```
 
 **系统已安装同款 skill 时自动优先使用系统版**（脚本 _resolve_script 逻辑），无需手动切换。
@@ -34,5 +32,5 @@
 - project.py：项目/帧记录
 
 ## 常见问题
-- 识图全部失败：检查 ZHIPU_API_KEY / MIMO_API_KEY 环境变量
+- 识图全部失败：检查 LEIHUO_VISION_API_KEY 环境变量
 - 参考库路径中文：PowerShell 中请用引号包裹完整路径

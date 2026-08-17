@@ -12,7 +12,12 @@ import subprocess
 import sys
 from datetime import date
 
-_SKILLS_ROOT = r"C:\Users\Felix\.codex\skills"
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+_SKILLS_ROOT = os.path.join(os.path.expanduser("~"), ".codex", "skills")
 _DEPS_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "deps")
 
 
@@ -90,7 +95,7 @@ def _ensure_api_keys():
     解决新开的 Codex/终端会话未加载新配置 key 的问题（用户级环境变量
     在会话启动后才设置时，进程环境里读不到）。
     """
-    for var in ("ZHIPU_API_KEY", "MIMO_API_KEY"):
+    for var in ("LEIHUO_VISION_API_KEY", "ZHIPU_API_KEY", "MIMO_API_KEY"):
         if os.environ.get(var):
             continue
         try:

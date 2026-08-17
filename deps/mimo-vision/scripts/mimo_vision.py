@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MiMo Vision v2 — 调用小米 MiMo-V2.5 多模态模型识别/描述图片。
+"""内网视觉识别备用脚本 — 调用 glm-5v-turbo 多模态模型识别/描述图片。
 
 v2 新增:
   --structured    结构化风格分析（输出 JSON，合并 PIL 技术信息）
@@ -26,16 +26,33 @@ import tempfile
 from pathlib import Path
 from datetime import datetime
 
-API_BASE = "https://api.xiaomimimo.com/v1"
-DEFAULT_MODEL = "mimo-v2.5"
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+API_BASE = "https://ai.leihuo.netease.com/v1"
+DEFAULT_MODEL = "glm-5v-turbo"
 
 
 def get_api_key():
-    for var in ("MIMO_API_KEY", "XIAOMI_MIMO_API_KEY"):
+    for var in ("LEIHUO_VISION_API_KEY", "MIMO_API_KEY", "XIAOMI_MIMO_API_KEY"):
         key = os.environ.get(var)
         if key:
             return key
-    sys.exit("Error: No API key. Set MIMO_API_KEY in env or .claude/settings.local.json.")
+    try:
+        import winreg
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as reg:
+            for var in ("LEIHUO_VISION_API_KEY", "MIMO_API_KEY", "XIAOMI_MIMO_API_KEY"):
+                try:
+                    value, _ = winreg.QueryValueEx(reg, var)
+                    if value:
+                        return value
+                except Exception:
+                    continue
+    except Exception:
+        pass
+    sys.exit("Error: No API key. Set LEIHUO_VISION_API_KEY in Windows user environment.")
 
 
 def image_to_base64(path: str) -> str:
@@ -111,7 +128,7 @@ def chat_vision(image_paths: list[str], prompt: str, model: str = DEFAULT_MODEL,
     req = urllib.request.Request(
         f"{API_BASE}/chat/completions",
         data=json.dumps(body).encode("utf-8"),
-        headers={"api-key": api_key, "Content-Type": "application/json"},
+        headers={"Authorization": "Bearer %s" % api_key, "Content-Type": "application/json"},
         method="POST",
     )
 

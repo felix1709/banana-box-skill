@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""GLM-4.6V-Flash 识图脚本：把本地图片/URL 发给智谱视觉模型，返回识别结果。"""
+"""内网视觉识别主脚本：把本地图片/URL 发给 doubao-seed-1-6-vision-250815，返回识别结果。"""
 import argparse
 import base64
 import json
@@ -9,8 +9,29 @@ import os
 import sys
 import urllib.request
 
-API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
-MODEL = "glm-4.6v-flash"
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+API_URL = "https://ai.leihuo.netease.com/v1/chat/completions"
+MODEL = "doubao-seed-1-6-vision-250815"
+
+
+def _get_api_key():
+    var = "LEIHUO_VISION_API_KEY"
+    api_key = os.environ.get(var)
+    if api_key:
+        return api_key
+    try:
+        import winreg
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+            value, _ = winreg.QueryValueEx(key, var)
+            if value:
+                return value
+    except Exception:
+        pass
+    return ""
 
 
 def image_to_data_url(path):
@@ -21,15 +42,15 @@ def image_to_data_url(path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="用 GLM-4.6V-Flash 识别图片")
+    parser = argparse.ArgumentParser(description="用 doubao-seed-1-6-vision-250815 识别图片")
     parser.add_argument("images", nargs="+", help="图片路径或 URL")
     parser.add_argument("-q", "--question", default="请详细描述这张图片的内容。", help="对图片提出的问题")
     parser.add_argument("--thinking", action="store_true", help="开启深度思考模式")
     args = parser.parse_args()
 
-    api_key = os.environ.get("ZHIPU_API_KEY")
+    api_key = _get_api_key()
     if not api_key:
-        print("错误：未设置 ZHIPU_API_KEY 环境变量", file=sys.stderr)
+        print("错误：未设置 LEIHUO_VISION_API_KEY 环境变量", file=sys.stderr)
         sys.exit(1)
 
     content = []
@@ -44,9 +65,6 @@ def main():
     content.append({"type": "text", "text": args.question})
 
     payload = {"model": MODEL, "messages": [{"role": "user", "content": content}]}
-    if args.thinking:
-        payload["thinking"] = {"type": "enabled"}
-
     req = urllib.request.Request(
         API_URL,
         data=json.dumps(payload).encode("utf-8"),
